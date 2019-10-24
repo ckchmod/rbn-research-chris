@@ -1,0 +1,65 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2017 The MathWorks, Inc.
+                   R2017a (9.2.0.538062) 64-bit (glnxa64)
+                             February 23, 2017
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> Restarting from iteration 1660, k=9, p=9.250000e-01, sim=5
+>> >> >> 
+ss =
+
+     5
+
+Elapsed time is 25.740383 seconds.
+
+p =
+
+    0.9250
+
+
+ss =
+
+     1
+
+Elapsed time is 14.680409 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 194.078944 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 13.221493 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 24.880014 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 7.029559 seconds.
+
+p =
+
+    0.9500
+
+
+k =
+
+     9
+
+>> Finished Simulation
+>> 

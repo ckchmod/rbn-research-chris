@@ -1,0 +1,421 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2017 The MathWorks, Inc.
+                   R2017a (9.2.0.538062) 64-bit (glnxa64)
+                             February 23, 2017
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> Restarting from iteration 1609, k=9, p=6.750000e-01, sim=4
+>> >> >> 
+ss =
+
+     4
+
+Elapsed time is 371.015701 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 370.115242 seconds.
+
+p =
+
+    0.6750
+
+
+ss =
+
+     1
+
+Elapsed time is 184.563545 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 363.407612 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 181.637750 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 363.732336 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 182.730502 seconds.
+
+p =
+
+    0.7000
+
+
+ss =
+
+     1
+
+Elapsed time is 182.284832 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 181.841448 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 181.006816 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 182.221214 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 183.234578 seconds.
+
+p =
+
+    0.7250
+
+
+ss =
+
+     1
+
+Elapsed time is 181.193494 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 181.399867 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 181.454067 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 183.870594 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 183.456248 seconds.
+
+p =
+
+    0.7500
+
+
+ss =
+
+     1
+
+Elapsed time is 94.924405 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 181.832142 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 182.339255 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 91.134736 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 181.184113 seconds.
+
+p =
+
+    0.7750
+
+
+ss =
+
+     1
+
+Elapsed time is 183.579533 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 185.642032 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 181.450747 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 91.193856 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 91.303496 seconds.
+
+p =
+
+    0.8000
+
+
+ss =
+
+     1
+
+Elapsed time is 183.238009 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 363.447365 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 91.736771 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 92.316402 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 92.252579 seconds.
+
+p =
+
+    0.8250
+
+
+ss =
+
+     1
+
+Elapsed time is 94.296624 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 182.832811 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 91.336942 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 91.559372 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 91.401288 seconds.
+
+p =
+
+    0.8500
+
+
+ss =
+
+     1
+
+Elapsed time is 91.679565 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 91.613731 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 91.842374 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 181.088337 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 181.765811 seconds.
+
+p =
+
+    0.8750
+
+
+ss =
+
+     1
+
+Elapsed time is 23.866403 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 23.893641 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 184.033573 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 23.877729 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 47.108870 seconds.
+
+p =
+
+    0.9000
+
+
+ss =
+
+     1
+
+Elapsed time is 24.005928 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 24.701460 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 92.340997 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 23.882970 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 92.886603 seconds.
+
+p =
+
+    0.9250
+
+
+ss =
+
+     1
+
+Elapsed time is 12.509348 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 13.180185 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 24.503660 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 24.466264 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 12.493538 seconds.
+
+p =
+
+    0.9500
+
+
+k =
+
+     9
+
+>> Finished Simulation
+>> 

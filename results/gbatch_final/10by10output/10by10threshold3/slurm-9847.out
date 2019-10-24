@@ -1,0 +1,118 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2017 The MathWorks, Inc.
+                   R2017a (9.2.0.538062) 64-bit (glnxa64)
+                             February 23, 2017
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> Restarting from iteration 819, k=5, p=4.250000e-01, sim=4
+>> >> >> 
+ss =
+
+     4
+
+Elapsed time is 111.875771 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 222.156270 seconds.
+
+p =
+
+    0.4250
+
+
+ss =
+
+     1
+
+Elapsed time is 223.022713 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 220.461853 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 111.120252 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 216.152257 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 215.465925 seconds.
+
+p =
+
+    0.4500
+
+
+ss =
+
+     1
+
+Elapsed time is 215.275800 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 215.780256 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 286.359572 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 216.851477 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 214.653059 seconds.
+
+p =
+
+    0.4750
+
+
+ss =
+
+     1
+
+Elapsed time is 215.969038 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 215.532957 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 217.194239 seconds.
+slurmstepd: error: *** JOB 9847 ON n2111 CANCELLED AT 2017-04-28T12:11:41 ***

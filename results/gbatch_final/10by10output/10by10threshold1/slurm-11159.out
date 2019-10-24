@@ -1,0 +1,561 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2017 The MathWorks, Inc.
+                   R2017a (9.2.0.538062) 64-bit (glnxa64)
+                             February 23, 2017
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> Restarting from iteration 1589, k=9, p=5.750000e-01, sim=4
+>> >> >> 
+ss =
+
+     4
+
+Elapsed time is 374.855088 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 372.166676 seconds.
+
+p =
+
+    0.5750
+
+
+ss =
+
+     1
+
+Elapsed time is 366.746844 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 365.581952 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 364.757622 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 365.914578 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 364.381839 seconds.
+
+p =
+
+    0.6000
+
+
+ss =
+
+     1
+
+Elapsed time is 364.565683 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 365.497822 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 364.544966 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 182.979252 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 365.262701 seconds.
+
+p =
+
+    0.6250
+
+
+ss =
+
+     1
+
+Elapsed time is 439.883615 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 184.345890 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 366.978734 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 183.454108 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 182.989466 seconds.
+
+p =
+
+    0.6500
+
+
+ss =
+
+     1
+
+Elapsed time is 93.553666 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 364.034766 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 183.179559 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 364.310580 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 182.957751 seconds.
+
+p =
+
+    0.6750
+
+
+ss =
+
+     1
+
+Elapsed time is 366.262663 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 365.670784 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 183.119704 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 364.988218 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 365.108267 seconds.
+
+p =
+
+    0.7000
+
+
+ss =
+
+     1
+
+Elapsed time is 364.914377 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 236.763801 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 182.936634 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 183.001614 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 183.859443 seconds.
+
+p =
+
+    0.7250
+
+
+ss =
+
+     1
+
+Elapsed time is 364.061664 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 363.718728 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 91.712456 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 182.801001 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 729.657962 seconds.
+
+p =
+
+    0.7500
+
+
+ss =
+
+     1
+
+Elapsed time is 92.348079 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 91.735897 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 365.659896 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 183.128634 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 91.812634 seconds.
+
+p =
+
+    0.7750
+
+
+ss =
+
+     1
+
+Elapsed time is 55.017445 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 363.609819 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 364.376299 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 364.974198 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 92.481824 seconds.
+
+p =
+
+    0.8000
+
+
+ss =
+
+     1
+
+Elapsed time is 364.421767 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 47.057965 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 182.872244 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 91.827937 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 46.936955 seconds.
+
+p =
+
+    0.8250
+
+
+ss =
+
+     1
+
+Elapsed time is 24.033159 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 365.774269 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 46.889733 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 92.848175 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 182.744638 seconds.
+
+p =
+
+    0.8500
+
+
+ss =
+
+     1
+
+Elapsed time is 182.932715 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 364.624528 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 24.124086 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 236.644071 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 46.889045 seconds.
+
+p =
+
+    0.8750
+
+
+ss =
+
+     1
+
+Elapsed time is 47.473847 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 366.995446 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 24.078736 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 24.671419 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 182.936351 seconds.
+
+p =
+
+    0.9000
+
+
+ss =
+
+     1
+
+Elapsed time is 183.078700 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 24.026919 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 12.806857 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 12.737444 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 24.778135 seconds.
+
+p =
+
+    0.9250
+
+
+ss =
+
+     1
+
+Elapsed time is 12.630946 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 12.885517 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 12.701523 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 364.855374 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 182.009075 seconds.
+
+p =
+
+    0.9500
+
+
+k =
+
+     9
+
+>> Finished Simulation
+>> 

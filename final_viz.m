@@ -1,0 +1,5 @@
+fig_convergence = open('Figures/final/ConvergenceSSD300.fig')
+fig_diversity = open('Figures/final/DiversityLyapunov300.fig')
+fig_simulation = open('Figures/final/simulation600.fig')
+fig_supplement = open('Figures/final/supplemental300.fig')
+fig_tissue = open('Figures/final/tissue300.fig')

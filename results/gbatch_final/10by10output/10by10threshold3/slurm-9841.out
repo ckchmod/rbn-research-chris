@@ -1,0 +1,136 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2017 The MathWorks, Inc.
+                   R2017a (9.2.0.538062) 64-bit (glnxa64)
+                             February 23, 2017
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> Restarting from iteration 797, k=5, p=3.250000e-01, sim=2
+>> >> >> 
+ss =
+
+     2
+
+Elapsed time is 112.348035 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 109.764520 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 108.457575 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 106.537847 seconds.
+
+p =
+
+    0.3250
+
+
+ss =
+
+     1
+
+Elapsed time is 105.293618 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 211.232206 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 212.123341 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 210.983289 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 105.466630 seconds.
+
+p =
+
+    0.3500
+
+
+ss =
+
+     1
+
+Elapsed time is 106.286151 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 279.207793 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 105.558802 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 209.810158 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 209.809226 seconds.
+
+p =
+
+    0.3750
+
+
+ss =
+
+     1
+
+Elapsed time is 259.140241 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 211.088531 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 210.963060 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 210.631884 seconds.
+slurmstepd: error: *** JOB 9841 ON n2105 CANCELLED AT 2017-04-28T12:11:41 ***

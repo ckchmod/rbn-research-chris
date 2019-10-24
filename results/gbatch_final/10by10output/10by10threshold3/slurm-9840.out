@@ -1,0 +1,71 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2017 The MathWorks, Inc.
+                   R2017a (9.2.0.538062) 64-bit (glnxa64)
+                             February 23, 2017
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> Restarting from iteration 778, k=5, p=2.250000e-01, sim=3
+>> >> >> 
+ss =
+
+     3
+
+Elapsed time is 1983.791600 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 30.586505 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 243.164711 seconds.
+
+p =
+
+    0.2250
+
+
+ss =
+
+     1
+
+Elapsed time is 240.643004 seconds.
+
+ss =
+
+     2
+
+Elapsed time is 31.847659 seconds.
+
+ss =
+
+     3
+
+Elapsed time is 243.233352 seconds.
+
+ss =
+
+     4
+
+Elapsed time is 121.599348 seconds.
+
+ss =
+
+     5
+
+Elapsed time is 122.208069 seconds.
+
+p =
+
+    0.2500
+
+slurmstepd: error: *** JOB 9840 ON n2026 CANCELLED AT 2017-04-28T12:11:41 ***
