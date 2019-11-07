@@ -1,0 +1,148 @@
+%% Large scale simulations of RBNp's 
+clc; clear all;
+load('/home/chrisk/Desktop/MATLAB-scripts/rbn-research-chris/results/gbatch_final/10by10output/10by10threshold2/outlier02_288.mat')
+
+steps = 2^10;
+interaction = 1;
+topology = 'ising';
+perturbation = .025;
+numCells = 16;
+viz_cells = 9;
+RBNpnew = boolCellGrid_v2( topology, numCells, RBNp.numGenes, RBNp.k, RBNp.p, ...
+     interaction, RBNp.initState, RBNp.initTtable, RBNp.initVar, perturbation);
+RBNpnew.update_all(steps);
+RBNp_ssDist = ssDist(RBNpnew);
+
+
+figure(1);
+for i = 1:numCells
+    subplot(sqrt(numCells), sqrt(numCells), i)
+    hold on
+    set(gca, 'YScale', 'log')
+    s1 = bar(1:length(RBNp_ssDist(i,:)), RBNp_ssDist(i,:), 5);
+    str=sprintf('Cell Number: %d', i);
+    title(str);axis([0 1024 0 0.04]);
+    hold off
+    alpha(s1,.5);
+end
+% 
+% figure(1);
+% for i = 1:viz_cells
+%     if (i <= 3)
+%         j = i;     
+%         if (mod(j,2) == 1)
+%             col = 'g';
+%         else
+%             col =  'b';
+%         end
+%      elseif (i <=6)
+%         j = i+7;
+%         if (mod(j,2) == 1)
+%             col = 'b';
+%         else
+%             col =  'g';
+%         end 
+%      else
+%         j = i+14;
+%         if (mod(j,2) == 1)
+%             col = 'g';
+%         else
+%             col = 'b';
+%         end
+%     end  
+%      %j=i;
+%      subplot(3,3, i)
+%      hold on
+%      set(gca, 'YScale', 'log')
+%      s1 = stem(1:length(RBNp_ssDist(j,:)), RBNp_ssDist(j,:),col);
+% 
+%      %s1 = bar(1:length(RBNp_ssDist(j,:)), RBNp_ssDist(j,:), 5)
+%      str=sprintf('Cell Number: %d', j);
+%      title(str);axis([0 1024 0 0.04]);
+%      hold off
+%      alpha(s1,.5);
+% end
+
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Simulating RBNp
+% % Create initial RBNp and RBNp*
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+% tic
+% RBNp = boolCellGrid(topology, numCells,numGenes, k, p, ...
+%     interaction, [], [], [], perturb);
+% lyapunov(RBNp.initTtable,numCells,interaction)
+% RBNp.update_all(steps);
+% lastRBNpStates = RBNp.allStates(:,:,end);                   
+% RBNpdummy = boolCellGrid(topology, numCells,numGenes, k, p, ...
+%     interaction, lastRBNpStates, RBNp.initTtable, RBNp.initvarF, perturb);
+% delta = size(RBNp.allStates,3)-1;
+% RBNpdummy.update_all(delta);
+% lastRBNpdummyStates = RBNpdummy.allStates(:,:,2:end);
+% 
+% %Calculate Steady State Distribution Here;
+% RBNp_ssDist = ssDist(RBNp); %nnz(RBNp_ssDist); 
+% RBNp.allStates = cat(3, RBNp.allStates, lastRBNpdummyStates);
+% RBNpstar_ssDist = ssDist(RBNp);%nnz(RBNpstar_ssDist);
+% 
+% for i = 1:numCells
+%    P = RBNp_ssDist(i, :);
+%    P_delta = RBNpstar_ssDist(i, :);
+%    converge = .5*(KLD(P,P_delta) + KLD(P_delta,P));
+%    if (converge < threshold)
+%        % continue loop to check every KLD(P,P*) converges;
+%        noconv = false;
+%    else
+%        noconv = true;
+%        break
+%    end
+% end      
+% 
+% while (noconv == true)
+%     lastRBNpStates = RBNp.allStates(:,:,end);                
+%     RBNpdummy = boolCellGrid(topology, numCells,numGenes, k, p, ...
+%         interaction, lastRBNpStates, RBNp.initTtable, RBNp.initvarF, perturb);
+%     delta = size(RBNp.allStates,3)-1;
+%     RBNpdummy.update_all(delta);
+%     lastRBNpdummyStates = RBNpdummy.allStates(:,:,2:end);                      
+%     RBNp_ssDist = RBNpstar_ssDist;
+%     RBNp.allStates = cat(3, RBNp.allStates, lastRBNpdummyStates);
+%     RBNpstar_ssDist = ssDist(RBNp);   
+%     for i = 1:numCells
+%         P = RBNp_ssDist(i, :);
+%         P_delta = RBNpstar_ssDist(i, :);
+%         converge = .5*(KLD(P,P_delta) + KLD(P_delta,P));
+%         if (converge < threshold)
+%             % continue loop to check every KLD(P,P*) converges;
+%             noconv = false;
+%         else
+%             noconv = true;
+%             break
+%         end
+%     end  
+%     convergeRow = [convergeRow, converge];
+%     converge
+% end
+% KLDMatrix = KLDPairwise(RBNpstar_ssDist);
+% t_final = size(RBNp.allStates,3)-1;
+% dataRow(1, 1) = k;
+% dataRow(1, 2) = p;
+% dataRow(1, 3) = lyapunov(RBNp.initTtable,numCells,interaction);
+% dataRow(1, 4) = mean(KLDMatrix);
+% dataRow(1, 5) = var(KLDMatrix);
+% dataRow(1, 6) = t_final;
+% toc    
+% figure
+% hold on
+% str = sprintf('g = .95, p = 0.0, t= %f, MeanKLD: %f', t_final, mean(KLDMatrix));
+% title(str)
+% for i = 1:9
+%     subplot(3,3, i)
+%     hold on
+%     s1 = scatter(1:length(RBNp_ssDist(i,:)), RBNp_ssDist(i,:),'filled')
+%     %s2 = scatter(1:length(RBNp_ssDist(i,:)), RBNpstar_ssDist(i,:), 'filled')
+%     hold off
+%     alpha(s1,.5);%alpha(s2,.5);
+% end
+% hold off
+% 
