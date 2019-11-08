@@ -18,6 +18,7 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
         initTruth   % Initial Truth Table
         initVar     % Initial Wiring Table
         perturb     % Perturbation
+        %pagerank    % Pagerank
         
         % Generated in the constructor
         allCells    % Array of all the cells
@@ -30,6 +31,10 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
         initOutCells% Which cells produce output
         criticality % Criticality measured by 2Kp(1-p)=1
         crit_val    % LHS of critcality value
+        %page_rank   % Speed up constant (default .95)
+        E_disordered % energy
+        E_magnetization %average magnetization
+        temp
         
         % For comparison with the 'drosophila.m' code
         allStates   % All states        
@@ -73,6 +78,11 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
             if isempty(initTruth)
                 [outCells, inCells] = genInOutCells(obj);
                 Ttable = genTtable(obj, inCells);
+            elseif strcmp(topology, 'ising')
+                dim = size(initTruth);
+                inCells = 1;
+                outCells = 1;
+                Ttable = initTruth;               
             else
                 dim = size(initTruth);
                 inCells = 1:obj.bandwidth;
@@ -123,7 +133,7 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
             %Set initial time to 1
             obj.timenow = 1;
             
-            %Output Critcality of individual Boolean Network
+            %Output Mean-Field Approx Critcality of individual Boolean Network
             obj.crit_val = 2*k*p*(1-p);
                 
             if (obj.crit_val < 1)
@@ -132,7 +142,18 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
                 obj.criticality = 'Chaotic';
             else
                 obj.criticality = 'Critical';
-            end           
+            end
+            
+            %obj.page_rank_default = 1;
+            %obj.page_rank_const = .95;
+            
+            if (strcmp(topology,'ising'))
+                obj.E_disordered = zeros(numCells,1);
+            end
+            
+            obj.temp = 2.2; % needs to change
+            E_magnetization = 0.0; 
+            
         end   
         
         %---------------------------------------------
@@ -140,8 +161,8 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
         %---------------------------------------------
         function obj = update_all(obj,numSteps)
             %Steps the simulation forward a given number of steps      
-            page_rank_default = 1;
-            page_rank_const = .95;
+            %page_rank_default = 1;
+            page_rank_const = 1; %page_rank_const .95
             tstart = obj.timenow;          
             for jT = tstart+1:(tstart+numSteps)  
 
@@ -166,10 +187,12 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
                     end
                 else
                     % Do nothing
-                end 
+                end
+
             end           
             obj.timenow = jT;          
-            obj.get_states;        
+            obj.get_states;
+            
         end
         
         %---------------------------------------------
@@ -676,7 +699,7 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
             neigh = obj.neighbors;
             
             if strcmp(topol,'single')
-                %asdfsdf
+                % single cell
                 thisCell = obj.allCells{1};
                 thisIn = thisCell.inCells(1); 
                 thisOut = thisCell.outCells(1);
@@ -689,49 +712,86 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
                 %% Single cell has sampled receing input
                 thisCell.states(thisIn, timestep) =...
                     randsample(2,1,true, [0 1])-1;
+            elseif strcmp(topol,'ising')
                 
-            if strcmp(topol,'ising')
+                 % ising model test
+                 intercellular_nodes = zeros(obj.numCells, 1);
+                 obj.E_disordered;
+                 temperature = obj.temp;
                  for jCell = 1:obj.numCells
-                    %Get the cell object we'll update
                     thisCell = obj.allCells{jCell};
-
-                    %Update the nodes that receive extracellular communication, as
-                    %passed by the caller inside the table 'interCell'
                     for jIn = 1:length(thisCell.inCells)
 
                         thisIn = thisCell.inCells(jIn); %The node receiving input
                         thisOut = thisCell.outCells(jIn); %The node OF THE NEIGHBOR that ouputs
 
                         neighStates = zeros(size(neigh,2),1);
-                        % rows = size(a,1); cols = size(a,2)
-                        % for i=1: in range rows
-                        % end
+
                         neigh;
                         for jNeigh = 1:size(neigh,2)
                             %Get the index of the neighbor we want to query
                             thisNeigh = neigh(jCell,jNeigh);
                             neighStates(jNeigh) = obj.allCells{thisNeigh}.states(thisOut,timestep);
                         end
-                        %Apply an 'or' function to the states of all of those
-                        %output nodes, and that is the state of the node we're
-                        %updating
-
-                        %thisCell.states(thisIn,timestep) = ...
-                        %     double(logical(sum(neighStates)));
-                         
-                        % Apply Linear Threshold of 2 (TEMPORARY)
+ 
                         neighStates; timestep;
-                        if ( strcmp(topol,'symmetric'))
-                            thisCell.states(thisIn,timestep) = ...
-                                double(logical(sum(neighStates) >= 2));
-                        elseif strcmp(topol,'line')
-                            thisCell.states(thisIn,timestep) = ...
-                                double(logical(sum(neighStates) >= 1));
-                        else
-                            error('Your topology isn''t supported')
-                        end
-                    end            
+                        thisCell.states(thisIn,timestep) = double(logical(sum(neighStates) >= 2));
+                    end
+                 intercellular_nodes(jCell) = thisCell.states(thisIn,timestep);
                  end
+                 figure(1)
+                 imagesc(reshape(intercellular_nodes, [sqrt(obj.numCells), sqrt(obj.numCells)])), title('Spin States'), colorbar, colormap winter;
+                 
+                 
+                 %% Initial Energy Calculation
+                                    
+                  for jCell = 1:size(neigh,1)
+                     N_S_W_E = [obj.allCells{neigh(jCell,1)}.states(thisOut,timestep), obj.allCells{neigh(jCell,2)}.states(thisOut,timestep), ...
+                         obj.allCells{neigh(jCell,3)}.states(thisOut,timestep), obj.allCells{neigh(jCell,4)}.states(thisOut,timestep)];
+                     N_S_W_E = energy(N_S_W_E);
+                     obj.E_disordered(jCell) =  -1*obj.allCells{jCell}.states(thisOut,timestep) * (N_S_W_E(1) + N_S_W_E(2) + ...
+                         N_S_W_E(3) + N_S_W_E(4) );
+                  end
+                 %% Metropolis algorithm begins here
+                  A_disordered = zeros(obj.numCells, 1);
+                  for jCell = 1:obj.numCells
+                      A_disordered(jCell) = obj.allCells{neigh(jCell,1)}.states(thisOut,timestep);
+                  end
+                  %A_disordered = reshape(A_disordered, [sqrt(obj.numCells), sqrt(obj.numCells)]);
+                  %E_disordered = reshape(obj.E_disordered, [sqrt(obj.numCells), sqrt(obj.numCells)]);
+                
+                  mc = randi(size(A_disordered,1));
+                  N_S_W_E = [obj.allCells{neigh(mc,1)}.states(thisOut,timestep), obj.allCells{neigh(mc,2)}.states(thisOut,timestep), ...
+                         obj.allCells{neigh(mc,3)}.states(thisOut,timestep), obj.allCells{neigh(mc,4)}.states(thisOut,timestep)];
+                  N_S_W_E = energy(N_S_W_E);
+                  E_disordered_new = -1*obj.allCells{jCell}.states(thisOut,timestep) * (N_S_W_E(1) + N_S_W_E(2) + ...
+                         N_S_W_E(3) + N_S_W_E(4) );
+                  %mc_i = randi(size(A_disordered,1)); mc_j = randi(size(A_disordered,2));
+                  %  [N,S,W,E] = boundaries(mc_i, mc_j, A_disordered);
+                    %E_disordered_new =  -1*(-A_disordered(mc_i,mc_j))* (A_disordered(S,mc_j) + A_disordered(N,mc_j) + A_disordered(mc_i,E) + A_disordered(mc_i,W));
+                    if (E_disordered_new < obj.E_disordered(mc))
+                        A_disordered(mc) = A_disordered(mc) * -1;
+                        obj.allCells{mc}.states(thisIn,timestep)= ~obj.allCells{mc}.states(thisIn,timestep);
+                        %E_disordered_0(mc_i,mc_j) = E_disordered_new;
+                    else
+                        k = exp(-(2*E_disordered_new)/temperature);
+                        if (rand() < obj.k) %(2*E_disordered_new)/temperature)
+                            %disp(k);
+                            A_disordered(mc) = A_disordered(mc) * -1;
+                            obj.allCells{mc}.states(thisIn,timestep)= ~obj.allCells{mc}.states(thisIn,timestep);
+                        end
+                    end
+                   %obj.E_magnetization = obj.E_magnetization + sum(A_disordered, 'all')/size(A_disordered,1);
+                   
+                    figure(2)
+                    subplot(1,2,1);
+                    imagesc(reshape(A_disordered, [sqrt(obj.numCells), sqrt(obj.numCells)])), title('Spin States'), colorbar, colormap winter;
+                    subplot(1,2,2);
+                    imagesc(reshape(obj.E_disordered, [sqrt(obj.numCells), sqrt(obj.numCells)])), title('Energy'), colorbar, colormap winter;
+                    title_time = strcat('t= ', string(timestep), ' temperature: ', ' ', string( temperature ) );
+                    suptitle(title_time);
+           
+                  
             else 
                 for jCell = 1:obj.numCells
                     %Get the cell object we'll update

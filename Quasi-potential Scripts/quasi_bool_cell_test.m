@@ -2,19 +2,19 @@
 clc; clear all;
 load('/home/chrisk/Desktop/MATLAB-scripts/rbn-research-chris/results/gbatch_final/10by10output/10by10threshold2/outlier02_288.mat')
 
-steps = 2^10;
+steps = 2^8;
 interaction = 1;
 topology = 'ising';
-perturbation = .025;
-numCells = 16;
+perturbation = 0;
+numCells = 64;
 viz_cells = 9;
+ 
 RBNpnew = boolCellGrid_v2( topology, numCells, RBNp.numGenes, RBNp.k, RBNp.p, ...
-     interaction, RBNp.initState, RBNp.initTtable, RBNp.initVar, perturbation);
+     interaction, [], [], [], perturbation);
 RBNpnew.update_all(steps);
 RBNp_ssDist = ssDist(RBNpnew);
 
-
-figure(1);
+figure(3);
 for i = 1:numCells
     subplot(sqrt(numCells), sqrt(numCells), i)
     hold on
