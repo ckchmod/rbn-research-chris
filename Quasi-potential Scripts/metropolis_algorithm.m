@@ -51,7 +51,7 @@ for tt = temp
             A_disordered(mc_i,mc_j) = A_disordered(mc_i,mc_j) * -1;
             %E_disordered_0(mc_i,mc_j) = E_disordered_new;
         else
-            if (rand() < exp(-(2*E_disordered_new)/temperature)) %(2*E_disordered_new)/temperature)
+            if (rand() < exp(-(E_disordered_new)/temperature)) %(2*E_disordered_new)/temperature)
                 A_disordered(mc_i,mc_j) = A_disordered(mc_i,mc_j) * -1;
             end
         end

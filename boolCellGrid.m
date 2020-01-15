@@ -137,7 +137,7 @@ classdef boolCellGrid < matlab.mixin.Copyable
         
         %---------------------------------------------
         % Full update function
-        %---------------------------------------------
+        %---------------------------------------------update_all
         function obj = update_all(obj,numSteps)
             %Steps the simulation forward a given number of steps         
             tstart = obj.timenow;          

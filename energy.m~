@@ -1,0 +1,14 @@
+function [energy] = energy(s_i , N_S_W_E, J)
+    N_S_W_E=
+    for i = 1:length(N_S_W_E)
+        
+        if (N_S_W_E(i) == 0)
+            N_S_W_E(i) = -1;
+        end
+          
+    end
+
+    energy = 1*obj.J * s_i(N_S_W_E(1) + N_S_W_E(2) + N_S_W_E(3) + N_S_W_E(4)); 
+    
+end
+

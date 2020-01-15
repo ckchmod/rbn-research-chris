@@ -4,7 +4,6 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
     % inter-cellular connections
     %   This class also supports several different topologies, as defined
     % by the 'neighbors' functions
-
     
     properties
         % Supplied by caller
@@ -34,7 +33,11 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
         %page_rank   % Speed up constant (default .95)
         E_disordered % energy
         E_magnetization %average magnetization
-        temp
+        J           % Hamiltonian
+        temperature
+        h_interac
+        
+        movie_end_steps
         
         % For comparison with the 'drosophila.m' code
         allStates   % All states        
@@ -42,7 +45,7 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
     
     methods        
         % Constructor
-        function obj = boolCellGrid_v2(topology,numCells,numGenes,k,p,bandwidth, initState, initTruth, initVar, perturb)
+        function obj = boolCellGrid_v2(topology,numCells,numGenes,k,p,bandwidth, initState, initTruth, initVar, perturb, J, temperature, h_interac)
             
             rng('shuffle');            
             obj.topology  = topology;
@@ -51,17 +54,11 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
             obj.k         = k;
             obj.p         = p;
             obj.bandwidth = bandwidth;
-            
-            if (nargin == 9)
-                obj.perturb = 0;
-                perturb = 0;
-            else
-                obj.perturb = perturb;
-            end
+            obj.perturb = perturb;
             
             % Get the randomized initial states
             if isempty(initState)
-                initialStates = genInit(obj);
+                initialStates = genInit(obj, topology);
             else
                 dim = size(initState);
                 assert(isempty(find(...
@@ -120,8 +117,7 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
             %   list (this object is a grid)
             allCells = cell(numCells,1);
             for cellPos=1:numCells
-                allCells{cellPos}=boolCell_v2(numGenes,k,p,bandwidth,Ttable,varF,outCells,inCells,perturb);
-                
+                allCells{cellPos}=boolCell_v2(numGenes,k,p,bandwidth,Ttable,varF,outCells,inCells,perturb);             
                 allCells{cellPos}.setPos(cellPos);
                 allCells{cellPos}.setState(initialStates(cellPos,:),1);
             end
@@ -144,15 +140,38 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
                 obj.criticality = 'Critical';
             end
             
+            obj.movie_end_steps = 2986;    
             %obj.page_rank_default = 1;
             %obj.page_rank_const = .95;
-            
+             
+            obj.temperature = temperature; % needs to change
+            obj.J = J;
+            obj.h_interac = h_interac;
+            obj.E_magnetization = 0.0;
+            h_f_temp = 1;
+       
             if (strcmp(topology,'ising'))
                 obj.E_disordered = zeros(numCells,1);
-            end
-            
-            obj.temp = 2.2; % needs to change
-            E_magnetization = 0.0; 
+                neigh = obj.neighbors;
+                for i = 1:obj.numCells
+                    N_S_W_E = [obj.allCells{neigh(i,1)}.states(obj.bandwidth,obj.timenow), obj.allCells{neigh(i,2)}.states(obj.bandwidth,obj.timenow), ...
+                             obj.allCells{neigh(i,3)}.states(obj.bandwidth,obj.timenow), obj.allCells{neigh(i,4)}.states(obj.bandwidth,obj.timenow)];
+                    energy_i = energy(obj.allCells{i}.states(1,1), N_S_W_E, J, h_interac, h_f_temp);
+                    
+                    obj.E_disordered(i) = energy_i;
+                end
+                
+                intercellular_nodes = zeros(obj.numCells, 1);
+                for jCell=1:numCells
+                    intercellular_nodes(jCell) = obj.allCells{jCell}.states(obj.bandwidth, obj.timenow);
+                end
+                
+                figure(1);
+                subplot(1,2,1);
+                imagesc(reshape( intercellular_nodes, [sqrt(obj.numCells), sqrt(obj.numCells)])), title('Intercellular Node State (Spin)'), colorbar, colormap winter;
+                subplot(1,2,2);
+                imagesc(reshape(obj.E_disordered, [sqrt(obj.numCells), sqrt(obj.numCells)])), title('Initial Energy'), colorbar, colormap winter;
+            end     
             
         end   
         
@@ -238,8 +257,8 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
             else
                 %cesaro instantiation uncomment to use it
                 b = zeros(sqrt(obj.numCells),sqrt(obj.numCells));
-                movie_end_steps = 2986;
-                for jT = 1:delta:movie_end_steps;%size(obj.allStates,3)
+                movie_end_steps = obj.movie_end_steps;
+                for jT = 1:delta:movie_end_steps; %size(obj.allStates,3)
                     
                     % We want to have a matrix of all the states, because
                     %   our actual cells are on a grid
@@ -530,81 +549,6 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
                             neighList(jLin,:) = [jYmin1, jXmin1];
                         end
                     end
-%                 case 'hexagonal'
-%                      gridSide = round(sqrt(numCells));                    
-%                      assert(gridSide-sqrt(numCells)<1e-4,...
-%                          'Only square grids are supported for now');
-%                      assert(mod(numCells,2) == 0, 'Only even grid works for hexagonal');
-%                      assert(gridSide >= 4, 'Hexagonal grid has to be at least 4x4');
-%                      matSize(1:2) = [gridSide;gridSide];                    
-%                      neighList = zeros(matSize(1)*matSize(2),6);                    
-%                      for jY = 1:matSize(1)
-%                          for jX = 1:matSize(2)
-%                              
-%                             %Get the linear index of the current point
-%                             jLin = sub2ind(matSize,jY,jX);
-%                              
-%                             %x neighbors
-%                             if jY~=1
-%                                 jYmin1 = sub2ind(matSize,jY-1,jX);
-%                             else
-%                                 jYmin1 = sub2ind(matSize,jY-1+matSize(1),jX);
-%                             end
-%                             if jY~=matSize(1)
-%                                 jYplu1 = sub2ind(matSize,jY+1,jX);
-%                             else
-%                                 jYplu1 = sub2ind(matSize,jY+1-matSize(1),jX);
-%                             end
-%                                                    
-%                             %y neighbors
-%                             if jX~=1
-%                                 jXmin1 = sub2ind(matSize,jY,jX-1);
-%                             else
-%                                 jXmin1 = sub2ind(matSize,jY,jX-1+matSize(2));
-%                             end
-%                             if jX~=matSize(2)
-%                                 jXplu1 = sub2ind(matSize,jY,jX+1);
-%                             else
-%                                 jXplu1 = sub2ind(matSize,jY,jX+1-matSize(2));
-%                             end
-%                             
-%                             % diagonals
-%                             if mod(jY,2) == 1
-%                                 if jX~=1
-%                                     if jY~=1
-%                                         jDmin1 = sub2ind(matSize,jY-1, jX-1);
-%                                         jDmax1 = sub2ind(matSize,jY-1, jX+1);
-%                                     else
-%                                         jDmin1 = sub2ind(matSize,jY-1, jX-1);
-%                                         jDmax1 = sub2ind(matSize,jY-1, jX+1);
-%                                     end
-%                                     
-%                                 else
-%                                     jDmin1 = sub2ind(matSize, jY-1+matSize(1), jX-1+matSize(1));
-%                                     jDmax1 = sub2ind(matSize, jY-1+matSize(1), jX+1); 
-%                                     %jDmax1 = sub2ind(matSize, jY1-matSize(1), jX+1-matSize(1));
-%                                 end
-% %                                 if jX~=matSize(1)
-% %                                     jDmax1 = sub2ind(matSize,jY-1, jX+1);
-% %                                 else
-% %                                     jDmax1 = sub2ind(matSize,jY-1+matSize(1), jX+1+matSize(1)); 
-% %                                 end
-% %                                 
-%                                 %if jX~=matSize(1)
-%                                 %    jDmax1 = sub2ind(matSize, 
-%                             else
-%                                 if jX~=matSize(1)
-%                                     jDmin1 = sub2ind(matSize,jY-1, jX+1);
-%                                     jDmax1 = sub2ind(matSize,jY+1, jX+1);
-%                                 else
-%                                     jDmin1 = sub2ind(matSize, jY-1, jX+1-matSize(1));
-%                                     jDmax1 = sub2ind(matSize, jY+1, jX+1-matSize(1));
-%                                 end
-%                             end
-%                             %disp(jLin)
-%                             neighList(jLin,:) = [jYmin1, jYplu1, jXmin1, jXplu1, jDmin1, jDmax1];
-%                         end
-%                    end
                 otherwise
                     error('Your topology isn''t supported')
             end         
@@ -672,8 +616,11 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
         %---------------------------------------------
         % Generate the output and input connections for the cells
         %---------------------------------------------
-        function initStates = genInit(obj)    
+        function initStates = genInit(obj, topology)    
             initStates = randi([0,1],obj.numCells,obj.numGenes);
+%             if strcmp(topology, 'ising')
+%                initStates(:,1) = reshape(checkerboard_2(sqrt(obj.numCells)), obj.numCells, 1);
+%             end
         end
 
         %---------------------------------------------
@@ -713,84 +660,82 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
                 thisCell.states(thisIn, timestep) =...
                     randsample(2,1,true, [0 1])-1;
             elseif strcmp(topol,'ising')
+               
+                % ising model test
+                intercellular_nodes_no_override = zeros(obj.numCells, 1);  
+                intercellular_nodes = zeros(obj.numCells, 1);  
+                for jCell=1:obj.numCells
+                    intercellular_nodes_no_override(jCell) = obj.allCells{jCell}.states(obj.bandwidth, timestep);               
+                    obj.allCells{jCell}.states(obj.bandwidth, timestep) = obj.allCells{jCell}.states(obj.bandwidth, timestep-1);
+                    intercellular_nodes(jCell) = obj.allCells{jCell}.states(obj.bandwidth, timestep);
+                end
                 
-                 % ising model test
-                 intercellular_nodes = zeros(obj.numCells, 1);
-                 obj.E_disordered;
-                 temperature = obj.temp;
-                 for jCell = 1:obj.numCells
-                    thisCell = obj.allCells{jCell};
-                    for jIn = 1:length(thisCell.inCells)
-
-                        thisIn = thisCell.inCells(jIn); %The node receiving input
-                        thisOut = thisCell.outCells(jIn); %The node OF THE NEIGHBOR that ouputs
-
-                        neighStates = zeros(size(neigh,2),1);
-
-                        neigh;
-                        for jNeigh = 1:size(neigh,2)
-                            %Get the index of the neighbor we want to query
-                            thisNeigh = neigh(jCell,jNeigh);
-                            neighStates(jNeigh) = obj.allCells{thisNeigh}.states(thisOut,timestep);
-                        end
- 
-                        neighStates; timestep;
-                        thisCell.states(thisIn,timestep) = double(logical(sum(neighStates) >= 2));
-                    end
-                 intercellular_nodes(jCell) = thisCell.states(thisIn,timestep);
-                 end
-                 figure(1)
-                 imagesc(reshape(intercellular_nodes, [sqrt(obj.numCells), sqrt(obj.numCells)])), title('Spin States'), colorbar, colormap winter;
-                 
-                 
-                 %% Initial Energy Calculation
-                                    
-                  for jCell = 1:size(neigh,1)
-                     N_S_W_E = [obj.allCells{neigh(jCell,1)}.states(thisOut,timestep), obj.allCells{neigh(jCell,2)}.states(thisOut,timestep), ...
-                         obj.allCells{neigh(jCell,3)}.states(thisOut,timestep), obj.allCells{neigh(jCell,4)}.states(thisOut,timestep)];
-                     N_S_W_E = energy(N_S_W_E);
-                     obj.E_disordered(jCell) =  -1*obj.allCells{jCell}.states(thisOut,timestep) * (N_S_W_E(1) + N_S_W_E(2) + ...
-                         N_S_W_E(3) + N_S_W_E(4) );
-                  end
-                 %% Metropolis algorithm begins here
-                  A_disordered = zeros(obj.numCells, 1);
-                  for jCell = 1:obj.numCells
-                      A_disordered(jCell) = obj.allCells{neigh(jCell,1)}.states(thisOut,timestep);
-                  end
-                  %A_disordered = reshape(A_disordered, [sqrt(obj.numCells), sqrt(obj.numCells)]);
-                  %E_disordered = reshape(obj.E_disordered, [sqrt(obj.numCells), sqrt(obj.numCells)]);
+                temperature_init = obj.temperature;
                 
-                  mc = randi(size(A_disordered,1));
-                  N_S_W_E = [obj.allCells{neigh(mc,1)}.states(thisOut,timestep), obj.allCells{neigh(mc,2)}.states(thisOut,timestep), ...
-                         obj.allCells{neigh(mc,3)}.states(thisOut,timestep), obj.allCells{neigh(mc,4)}.states(thisOut,timestep)];
-                  N_S_W_E = energy(N_S_W_E);
-                  E_disordered_new = -1*obj.allCells{jCell}.states(thisOut,timestep) * (N_S_W_E(1) + N_S_W_E(2) + ...
-                         N_S_W_E(3) + N_S_W_E(4) );
-                  %mc_i = randi(size(A_disordered,1)); mc_j = randi(size(A_disordered,2));
-                  %  [N,S,W,E] = boundaries(mc_i, mc_j, A_disordered);
-                    %E_disordered_new =  -1*(-A_disordered(mc_i,mc_j))* (A_disordered(S,mc_j) + A_disordered(N,mc_j) + A_disordered(mc_i,E) + A_disordered(mc_i,W));
-                    if (E_disordered_new < obj.E_disordered(mc))
-                        A_disordered(mc) = A_disordered(mc) * -1;
-                        obj.allCells{mc}.states(thisIn,timestep)= ~obj.allCells{mc}.states(thisIn,timestep);
-                        %E_disordered_0(mc_i,mc_j) = E_disordered_new;
+%                 figure(2)
+%                 imagesc(reshape(intercellular_nodes, [sqrt(obj.numCells), sqrt(obj.numCells)])), colorbar, colormap winter
+%                 title_time = strcat('Before calculation should be 0, temperature: ', ' ', string( temperature_init ) );
+%                 title(title_time)
+
+                thisOut = obj.bandwidth; 
+                thisIn = obj.bandwidth;
+
+                mc = randi(obj.numCells);
+                neigh = obj.neighbors(mc, :);
+                
+                h_const = obj.h_interac;
+                h_f = intercellular_nodes_no_override(mc);
+                
+                N_S_W_E = [obj.allCells{neigh(1)}.states(thisOut,timestep-1), obj.allCells{neigh(2)}.states(thisOut,timestep-1), ...
+                         obj.allCells{neigh(3)}.states(thisOut,timestep-1), obj.allCells{neigh(4)}.states(thisOut,timestep-1)];
+                energy_old = energy(obj.allCells{mc}.states(thisOut,timestep-1), N_S_W_E, obj.J, h_const, h_f);
+
+                flip =  obj.allCells{mc}.states(thisOut,timestep-1);
+                
+                if( flip == 0)
+                    % flip from 0 to 1
+                    flip = 1;
+                else
+                    % flip from 1 to 0
+                    flip = -1;
+                end
+                
+                energy_new = energy(flip, N_S_W_E, obj.J, h_const, h_f);
+                dE = energy_new - energy_old;
+                k_B = -1; % -1 signifies dE < 0 passed
+       
+                if (dE < 0)
+                    %unflip 
+                    if( flip == -1)
+                        obj.allCells{mc}.states(thisOut,timestep) = 0;
                     else
-                        k = exp(-(2*E_disordered_new)/temperature);
-                        if (rand() < obj.k) %(2*E_disordered_new)/temperature)
-                            %disp(k);
-                            A_disordered(mc) = A_disordered(mc) * -1;
-                            obj.allCells{mc}.states(thisIn,timestep)= ~obj.allCells{mc}.states(thisIn,timestep);
+                        obj.allCells{mc}.states(thisOut,timestep) = 1;
+                    end
+                else
+                    k_B = exp(-(dE)/temperature_init);
+                    if (rand() < k_B) 
+                        %display('flipped')
+                        if( flip == -1)
+                            obj.allCells{mc}.states(thisOut,timestep) = 0;
+                        else
+                            obj.allCells{mc}.states(thisOut,timestep) = 1;
                         end
                     end
-                   %obj.E_magnetization = obj.E_magnetization + sum(A_disordered, 'all')/size(A_disordered,1);
-                   
-                    figure(2)
-                    subplot(1,2,1);
-                    imagesc(reshape(A_disordered, [sqrt(obj.numCells), sqrt(obj.numCells)])), title('Spin States'), colorbar, colormap winter;
-                    subplot(1,2,2);
-                    imagesc(reshape(obj.E_disordered, [sqrt(obj.numCells), sqrt(obj.numCells)])), title('Energy'), colorbar, colormap winter;
-                    title_time = strcat('t= ', string(timestep), ' temperature: ', ' ', string( temperature ) );
-                    suptitle(title_time);
-           
+                end
+                
+                if (mod(timestep, 100) == 0)
+                    intercellular_nodes = zeros(obj.numCells, 1);  
+                    for jCell=1:obj.numCells
+                        intercellular_nodes(jCell) = obj.allCells{jCell}.states(obj.bandwidth, timestep);
+                    end
+
+                    temperature_init = obj.temperature;
+                    figure(3)
+                    imagesc(reshape(intercellular_nodes, [sqrt(obj.numCells), sqrt(obj.numCells)])), colorbar, colormap winter
+                    title_time = strcat('Ater calculation, temperature: ', ' ', string( temperature_init ) );
+                    title(title_time) 
+                    suptitle(strcat('t= ', string(timestep), ',  mc= ', string(mc), ',   dE= ', string(dE), ',   k_B= ', string(k_B)));
+                end
                   
             else 
                 for jCell = 1:obj.numCells
@@ -828,20 +773,9 @@ classdef boolCellGrid_v2 < matlab.mixin.Copyable
                             thisCell.states(thisIn,timestep) = ...
                                 double(logical(sum(neighStates) >= 2));
                             
-                            %thisCell.states(thisIn,timestep) = 1;
-                            
-%                             test_tbd = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, ...
-%                                 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, ...
-%                                 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, ...
-%                                 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, ...
-%                                 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, ...
-%                                 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, ...
-%                                 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, ...
-%                                 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, ...
-%                                 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, ...
-%                                  0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
-%                             
-                            %thisCell.states(thisIn,timestep) = test_tbd(thisCell.cellPos);
+                            % thisCell.states(thisIn,timestep) = 1;                           
+                            % test_tbd = checkerboard_2(sqrt(obj.numCells));
+                            % thisCell.states(thisIn,timestep) = test_tbd(thisCell.cellPos);
                             
                         elseif strcmp(topol,'line')
                             thisCell.states(thisIn,timestep) = ...
